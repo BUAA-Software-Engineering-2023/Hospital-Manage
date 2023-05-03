@@ -12,7 +12,7 @@
 						<div class="info-image" @click="showDialog">
 							<el-avatar :size="100" :src="avatarImg" />
 							<span class="info-edit">
-								<i class="el-icon-lx-camerafill"></i>
+								<el-icon><Camera /></el-icon>
 							</span>
 						</div>
 						<div class="info-name">{{ name }}</div>
