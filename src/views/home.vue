@@ -15,8 +15,8 @@
 	</div>
 </template>
 <script setup lang="ts">
-import { useSidebarStore } from '../stores/sidebar';
-import { useTagsStore } from '../stores/tags';
+import { useSidebarStore } from '../stores/sidebar.js';
+import { useTagsStore } from '../stores/tags.js';
 import vHeader from '../components/header.vue';
 import vSidebar from '../components/sidebar.vue';
 import vTags from '../components/tags.vue';
