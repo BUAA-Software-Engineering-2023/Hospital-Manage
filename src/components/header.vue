@@ -15,7 +15,7 @@
 						:content="message ? `有${message}条未读消息` : `消息中心`"
 						placement="bottom"
 					>
-						<i class="el-icon-lx-notice"></i>
+						<el-icon><Bell /></el-icon>
 					</el-tooltip>
 					<span class="btn-bell-badge" v-if="message"></span>
 				</div>
