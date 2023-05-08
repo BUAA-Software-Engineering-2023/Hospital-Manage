@@ -15,7 +15,7 @@
 						type="password"
 						placeholder="password"
 						v-model="param.password"
-						@keyup.enter="submitForm(login)"
+						@keyup.enter="submitForm(Login)"
 					>
 						<template #prepend>
 							<el-button :icon="Lock"></el-button>
@@ -23,7 +23,7 @@
 					</el-input>
 				</el-form-item>
 				<div class="login-btn">
-					<el-button type="primary" @click="submitForm(login)">登录</el-button>
+					<el-button type="primary" @click="submitForm(Login)">登录</el-button>
 				</div>
 				<p class="login-tips">Tips : 用户名和密码随便填。</p>
 			</el-form>

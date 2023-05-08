@@ -1,120 +1,5 @@
-// import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
-// import Home from '../views/home.vue';
-//
-// const routes: RouteRecordRaw[] = [
-//     {
-//         path: '/',
-//         redirect: '/dashboard',
-//     },
-//     {
-//         path: '/',
-//         name: 'Home',
-//         component: Home,
-//         children: [
-//             {
-//                 path: '/dashboard',
-//                 name: 'dashboard',
-//                 meta: {
-//                     title: '系统首页',
-//                 },
-//                 component: () => import(/* webpackChunkName: "dashboard" */ '../views/dashboard.vue'),
-//             },
-//             {
-//                 path: '/department',
-//                 name: 'department',
-//                 meta: {
-//                     title: '科室管理',
-//                 },
-//                 component: () => import(/* webpackChunkName: "department" */ '../views/department.vue'),
-//             },
-//             {
-//                 path: '/doctor',
-//                 name: 'doctor',
-//                 meta: {
-//                     title: '医生管理',
-//                 },
-//                 component: () => import(/* webpackChunkName: "department" */ '../views/doctor.vue'),
-//             },
-//             {
-//                 path: '/schedule',
-//                 name: 'schedule',
-//                 meta: {
-//                     title: '出诊排班',
-//                 },
-//                 component: () => import(/* webpackChunkName: "department" */ '../views/schedule.vue'),
-//             },
-//             {
-//                 path: '/vacancy',
-//                 name: 'vacancy',
-//                 meta: {
-//                     title: '放号管理',
-//                 },
-//                 component: () => import(/* webpackChunkName: "department" */ '../views/vacancy.vue'),
-//             },
-//             {
-//                 path: '/leave',
-//                 name: 'leave',
-//                 meta: {
-//                     title: '医生请假',
-//                 },
-//                 component: () => import(/* webpackChunkName: "department" */ '../views/leave.vue'),
-//             },
-//             {
-//                 path: '/announcement',
-//                 name: 'announcement',
-//                 meta: {
-//                     title: '通知系统',
-//                 },
-//                 component: () => import(/* webpackChunkName: "editor" */ '../views/announcement.vue'),
-//             },
-//             {
-//                 path: '/information',
-//                 name: 'information',
-//                 meta: {
-//                     title: '消息系统',
-//                 },
-//                 component: () => import(/* webpackChunkName: "tabs" */ '../views/information.vue'),
-//             },
-//             {
-//                 path: '/user',
-//                 name: 'user',
-//                 meta: {
-//                     title: '个人中心',
-//                 },
-//                 component: () => import(/* webpackChunkName: "user" */ '../views/user.vue'),
-//             },
-//         ],
-//     },
-//     {
-//         path: '/login',
-//         name: 'Login',
-//         meta: {
-//             title: '登录',
-//         },
-//         component: () => import(/* webpackChunkName: "login" */ '../views/login.vue'),
-//     },
-// ];
-//
-// const router = createRouter({
-//     history: createWebHashHistory(),
-//     routes,
-// });
-//
-// router.beforeEach((to, from, next) => {
-//     document.title = `${to.meta.title} | hospital-manage`;
-//     const role = localStorage.getItem('ms_username');
-//     if (!role && to.path !== '/login') {
-//         next('/login');
-//     } else {
-//         next();
-//     }
-// });
-//
-// export default router;
-
-
 import {createRouter, createWebHashHistory} from 'vue-router';
-import Home from '../views/home.vue';
+import Home from '../views/Home.vue';
 
 const routes = [
     {
@@ -132,7 +17,7 @@ const routes = [
                 meta: {
                     title: '系统首页',
                 },
-                component: () => import(/* webpackChunkName: "dashboard" */ '../views/dashboard.vue'),
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/Dashboard.vue'),
             },
             {
                 path: '/department',
@@ -140,7 +25,7 @@ const routes = [
                 meta: {
                     title: '科室管理',
                 },
-                component: () => import(/* webpackChunkName: "department" */ '../views/department.vue'),
+                component: () => import(/* webpackChunkName: "department" */ '../views/department/Department.vue'),
             },
             {
                 path: '/doctor',
@@ -148,7 +33,7 @@ const routes = [
                 meta: {
                     title: '医生管理',
                 },
-                component: () => import(/* webpackChunkName: "department" */ '../views/doctor.vue'),
+                component: () => import(/* webpackChunkName: "department" */ '../views/Doctor.vue'),
             },
             {
                 path: '/schedule',
@@ -156,7 +41,7 @@ const routes = [
                 meta: {
                     title: '出诊排班',
                 },
-                component: () => import(/* webpackChunkName: "department" */ '../views/schedule.vue'),
+                component: () => import(/* webpackChunkName: "department" */ '../views/Schedule.vue'),
             },
             {
                 path: '/vacancy',
@@ -164,7 +49,7 @@ const routes = [
                 meta: {
                     title: '放号管理',
                 },
-                component: () => import(/* webpackChunkName: "department" */ '../views/vacancy.vue'),
+                component: () => import(/* webpackChunkName: "department" */ '../views/Vacancy.vue'),
             },
             {
                 path: '/leave',
@@ -172,7 +57,7 @@ const routes = [
                 meta: {
                     title: '医生请假',
                 },
-                component: () => import(/* webpackChunkName: "department" */ '../views/leave.vue'),
+                component: () => import(/* webpackChunkName: "department" */ '../views/leave/Leave.vue'),
             },
             {
                 path: '/announcement',
@@ -180,7 +65,7 @@ const routes = [
                 meta: {
                     title: '通知系统',
                 },
-                component: () => import(/* webpackChunkName: "editor" */ '../views/announcement.vue'),
+                component: () => import(/* webpackChunkName: "editor" */ '../views/Announcement.vue'),
             },
             {
                 path: '/information',
@@ -188,7 +73,7 @@ const routes = [
                 meta: {
                     title: '消息系统',
                 },
-                component: () => import(/* webpackChunkName: "tabs" */ '../views/information.vue'),
+                component: () => import(/* webpackChunkName: "tabs" */ '../views/Information.vue'),
             },
             {
                 path: '/user',
@@ -196,7 +81,7 @@ const routes = [
                 meta: {
                     title: '个人中心',
                 },
-                component: () => import(/* webpackChunkName: "user" */ '../views/user.vue'),
+                component: () => import(/* webpackChunkName: "user" */ '../views/User.vue'),
             },
         ],
     },
@@ -206,7 +91,7 @@ const routes = [
         meta: {
             title: '登录',
         },
-        component: () => import(/* webpackChunkName: "login" */ '../views/login.vue'),
+        component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
     },
 ];
 
