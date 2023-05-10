@@ -33,7 +33,7 @@ const routes = [
                 meta: {
                     title: '医生管理',
                 },
-                component: () => import(/* webpackChunkName: "department" */ '../views/Doctor.vue'),
+                component: () => import(/* webpackChunkName: "department" */ '../views/doctor/Doctor.vue'),
             },
             {
                 path: '/schedule',
