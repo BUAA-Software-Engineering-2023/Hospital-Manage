@@ -41,7 +41,7 @@ const routes = [
                 meta: {
                     title: '出诊排班',
                 },
-                component: () => import(/* webpackChunkName: "department" */ '../views/Schedule.vue'),
+                component: () => import(/* webpackChunkName: "department" */ '../views/schedule/Schedule.vue'),
             },
             {
                 path: '/vacancy',

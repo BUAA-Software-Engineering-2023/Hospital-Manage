@@ -10,11 +10,10 @@
             :data="tableData"
             style="width: 100%"
             row-key="id"
-            border
             :default-expand-all="false"
         >
             <el-table-column type="selection" width="55" />
-            <el-table-column prop="name" label="名称" />
+            <el-table-column prop="name" label="名称" width="180"/>
             <el-table-column prop="description" label="介绍" show-overflow-tooltip/>
             <el-table-column align="right" width="100">
                 <el-button type="primary" @click="showDialog">
