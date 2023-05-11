@@ -16,17 +16,18 @@
         <el-table
                 :data="tableData"
                 style="width: 100%"
-                border
         >
             <el-table-column type="selection" width="55" />
             <el-table-column
                     prop="name"
                     label="姓名"
+                    width="180"
             >
             </el-table-column>
             <el-table-column
                     prop="department"
                     label="部门"
+                    width="180"
             >
             </el-table-column>
             <el-table-column
