@@ -10,25 +10,13 @@
             unique-opened
             router
         >
-            <template v-for="item in items">
-                <template v-if="item.subs">
-                    <el-sub-menu :index="item.index" :key="item.index">
-                        <template #title>
-                            <el-icon>
-                                <component :is="item.icon"></component>
-                            </el-icon>
-                            <span>{{ item.title }}</span>
-                        </template>
-                    </el-sub-menu>
-                </template>
-                <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index">
+            <template v-for="item in items" :key="item.index">
+                    <el-menu-item :index="item.index">
                         <el-icon>
                             <component :is="item.icon"></component>
                         </el-icon>
                         <template #title>{{ item.title }}</template>
                     </el-menu-item>
-                </template>
             </template>
         </el-menu>
     </div>
@@ -36,7 +24,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useSidebarStore } from '../stores/sidebar';
+import { useSidebarStore } from '../stores/sidebar.js';
 import { useRoute } from 'vue-router';
 
 const items = [
