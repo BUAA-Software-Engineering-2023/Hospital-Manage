@@ -54,10 +54,6 @@ const props = defineProps(['display', 'doctor']);
 const emit = defineEmits(['close']);
 
 const scheduleList = reactive([
-    {
-        scheduleId: '',
-        scheduleTime: ''
-    }
 ])
 
 const handleClose = (done) => {
@@ -67,7 +63,7 @@ const handleClose = (done) => {
 
 const onSubmit = () => {
     emit('close',false)
-    console.log('submit!')
+    console.log(props.doctor.doctorSchedule)
 }
 
 function formatDate(today, yyyymmdd) {
