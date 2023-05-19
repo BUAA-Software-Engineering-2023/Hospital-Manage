@@ -12,27 +12,12 @@
 					</div>
 					<div class="user-info-list">
 						上次登录时间：
-						<span>2023-04-30</span>
+						<span>2023-05-15</span>
 					</div>
 					<div class="user-info-list">
 						上次登录地点：
 						<span>北京</span>
 					</div>
-				</el-card>
-				<el-card shadow="hover" style="height: 252px">
-					<template #header>
-						<div class="clearfix">
-							<span>患者分布</span>
-						</div>
-					</template>
-					60+
-					<el-progress :percentage="79.4" color="#42b983"></el-progress>
-					50-60
-					<el-progress :percentage="14" color="#f1e05a"></el-progress>
-					40-50
-					<el-progress :percentage="5.6"></el-progress>
-					40-
-					<el-progress :percentage="1" color="#f56c6c"></el-progress>
 				</el-card>
 			</el-col>
 			<el-col :span="16">
@@ -72,32 +57,7 @@
 					</el-col>
 				</el-row>
 				<el-card shadow="hover" style="height: 403px">
-					<template #header>
-						<div class="clearfix">
-							<span>待办事项</span>
-							<el-button style="float: right; padding: 3px 0" text>添加</el-button>
-						</div>
-					</template>
-
-					<el-table :show-header="false" :data="todoList" style="width: 100%">
-						<el-table-column width="40">
-							<template #default="scope">
-								<el-checkbox v-model="scope.row.status"></el-checkbox>
-							</template>
-						</el-table-column>
-						<el-table-column>
-							<template #default="scope">
-								<div
-									class="todo-item"
-									:class="{
-										'todo-item-del': scope.row.status
-									}"
-								>
-									{{ scope.row.title }}
-								</div>
-							</template>
-						</el-table-column>
-					</el-table>
+						<el-calendar  class="test" v-model="value" />
 				</el-card>
 			</el-col>
 		</el-row>
@@ -111,75 +71,9 @@ import imgurl from '../assets/img/img.jpg';
 const name = localStorage.getItem('ms_username');
 const role: string = name === 'admin' ? '超级管理员' : '普通用户';
 
-const options = {
-	type: 'bar',
-	title: {
-		text: '最近一周各品类销售图'
-	},
-	xRorate: 25,
-	labels: ['周一', '周二', '周三', '周四', '周五'],
-	datasets: [
-		{
-			label: '家电',
-			data: [234, 278, 270, 190, 230]
-		},
-		{
-			label: '百货',
-			data: [164, 178, 190, 135, 160]
-		},
-		{
-			label: '食品',
-			data: [144, 198, 150, 235, 120]
-		}
-	]
-};
-const options2 = {
-	type: 'line',
-	title: {
-		text: '最近几个月各品类销售趋势图'
-	},
-	labels: ['6月', '7月', '8月', '9月', '10月'],
-	datasets: [
-		{
-			label: '家电',
-			data: [234, 278, 270, 190, 230]
-		},
-		{
-			label: '百货',
-			data: [164, 178, 150, 135, 160]
-		},
-		{
-			label: '食品',
-			data: [74, 118, 200, 235, 90]
-		}
-	]
-};
-const todoList = reactive([
-	{
-		title: '今天要修复100个bug',
-		status: false
-	},
-	{
-		title: '今天要修复100个bug',
-		status: false
-	},
-	{
-		title: '今天要写100行代码加几个bug吧',
-		status: false
-	},
-	{
-		title: '今天要修复100个bug',
-		status: false
-	},
-	{
-		title: '今天要修复100个bug',
-		status: true
-	},
-	{
-		title: '今天要写100行代码加几个bug吧',
-		status: true
-	}
-]);
+import { ref } from 'vue'
+const value = ref(new Date())
+
 </script>
 
 <style scoped>
@@ -281,8 +175,8 @@ const todoList = reactive([
 	color: #999;
 }
 
-.schart {
-	width: 100%;
-	height: 300px;
+.test /deep/  .el-calendar-table .el-calendar-day{
+	width: 60px;
+	height: 40px;
 }
 </style>
