@@ -3,7 +3,11 @@ import { defineStore } from 'pinia';
 export const useTagsStore = defineStore('tags', {
 	state: () => {
 		return {
-			list: []
+			list: [{
+				name:'dashboard',
+				title:'系统首页',
+				path:'/dashboard',
+			}]
 		};
 	},
 	getters: {
