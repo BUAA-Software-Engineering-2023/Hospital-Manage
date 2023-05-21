@@ -70,7 +70,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
             if (valid && message === '登录成功') {
                 ElMessage.success('登录成功');
                 localStorage.setItem('ms_username', param.username);
-                setInterval(() => {
+                setTimeout(() => {
                     router.push('/');
                 }, 1000);
             } else {
