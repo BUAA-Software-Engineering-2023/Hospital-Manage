@@ -45,9 +45,12 @@
 </template>
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useSidebarStore } from '../stores/sidebar';
+import { useSidebarStore } from '../stores/sidebar.js';
 import { useRouter } from 'vue-router';
 import imgurl from '../assets/img/img.jpg';
+import {ArrowDown, Bell, Expand, Fold} from "@element-plus/icons-vue";
+import { ElDropdown, ElDropdownItem, ElDropdownMenu, ElIcon, ElTooltip, ElAvatar} from 'element-plus';
+import {clearToken} from "../utils/token.js";
 
 const username: string | null = localStorage.getItem('ms_username');
 const message: number = 2;
@@ -69,6 +72,7 @@ const router = useRouter();
 const handleCommand = (command: string) => {
 	if (command == 'loginout') {
 		localStorage.removeItem('ms_username');
+		clearToken();
 		router.push('/login');
 	} else if (command == 'user') {
 		router.push('/user');
