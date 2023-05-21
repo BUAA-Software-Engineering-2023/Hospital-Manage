@@ -7,7 +7,7 @@
 						<el-avatar :size="120" :src="imgurl" />
 						<div class="user-info-cont">
 							<div class="user-info-name">{{ name }}</div>
-							<div>{{ role }}</div>
+							<div>管理员</div>
 						</div>
 					</div>
 					<div class="user-info-list">
@@ -64,12 +64,10 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="dashboard">
-import { reactive } from 'vue';
+<script setup>
 import imgurl from '../assets/img/img.jpg';
 
 const name = localStorage.getItem('ms_username');
-const role: string = name === 'admin' ? '超级管理员' : '普通用户';
 
 import { ref } from 'vue'
 const value = ref(new Date())

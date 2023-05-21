@@ -102,8 +102,8 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title} | hospital-manage`;
-    const role = localStorage.getItem('ms_username');
-    if (!role && to.path !== '/login') {
+    const token = localStorage.getItem('TOKEN');
+    if (!token && to.path !== '/login') {
         next('/login');
     } else {
         next();

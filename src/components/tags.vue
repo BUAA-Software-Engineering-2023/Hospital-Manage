@@ -33,6 +33,7 @@
 <script setup lang="ts">
 import { useTagsStore } from '../stores/tags.js';
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
+import {ArrowDown, Close} from "@element-plus/icons-vue";
 
 const route = useRoute();
 const router = useRouter();
