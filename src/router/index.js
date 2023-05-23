@@ -106,6 +106,7 @@ router.beforeEach((to, from, next) => {
     if (!token && to.path !== '/login') {
         next('/login');
     } else {
+        // console.log(to);
         next();
     }
 });

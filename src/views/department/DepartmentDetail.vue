@@ -1,21 +1,21 @@
 <template>
-    <el-dialog width="75%" v-model="props.display" :before-close="handleClose">
+    <el-dialog width="75%" v-model="display">
         <el-form :model="form" label-width="120px">
             <el-form-item label="科室名称">
-                <el-input v-model="form.name" />
+                <el-input v-model="form.name" :disabled="props.editable"/>
             </el-form-item>
             <el-form-item label="科室类别">
-                <el-select v-model="form.region" placeholder="选择一级科室类别">
-                    <el-option label="内科" value="1" />
-                    <el-option label="外科" value="2" />
+                <el-select v-model="form.region" placeholder="选择一级科室类别" :disabled="props.editable">
+                    <el-option value="内科" />
+                    <el-option value="外科" />
                 </el-select>
             </el-form-item>
             <el-form-item label="科室介绍">
-                <el-input v-model="form.desc" type="textarea" />
+                <el-input v-model="form.description" type="textarea" :disabled="props.editable"/>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="onSubmit">Create</el-button>
-                <el-button @click="this.$emit('close',false)">Cancel</el-button>
+                <el-button type="primary" @click="onSubmit" v-if="!props.editable">{{func}}</el-button>
+                <el-button @click="display=false" v-if="!props.editable">取消</el-button>
             </el-form-item>
         </el-form>
     </el-dialog>
@@ -24,26 +24,78 @@
 
 <script setup>
 
-const emit = defineEmits(['close']);
-const props = defineProps(['display']);
+import {ElMessage} from "element-plus";
 
-const handleClose = (done) => {
-    emit('close',false)
-    done();
-}
+const props = defineProps(['modelValue', 'departmentData', 'editable']);
+const emit = defineEmits(['update:modelValue', 'update:departmentData']);
 
-import { reactive } from 'vue'
+import {computed, inject, reactive} from 'vue';
 
-// do not use same name with ref
-const form = reactive({
-    name: '',
-    region: '',
-    desc: '',
+const $api = inject('$api');
+
+const func = computed(() => {
+    if (props.departmentData) {
+        return '修改';
+    } else {
+        return '创建';
+    }
 })
 
-const onSubmit = () => {
-    emit('close',false)
-    console.log('submit!')
+const display = computed({
+    get() {
+        return props.modelValue;
+    },
+    set(value) {
+        emit('update:modelValue', value);
+    }
+});
+
+const data = reactive({
+    name: '',
+    region: '',
+    description: ''
+})
+
+const form = computed({
+    get() {
+        if (!props.departmentData) {
+            return data;
+        }
+        return props.departmentData;
+    },
+    set(value) {
+        emit('update:departmentData', value);
+    }
+})
+
+const onSubmit = async () => {
+    if (props.departmentData) {
+        await $api.department.updateDepartment(form.value.name, form.value.region, form.value.description).then(res => {
+            if (res.result === '1') {
+                ElMessage.success('修改成功');
+                display.value = false;
+            } else {
+                ElMessage.error(res.message);
+                console.log(res);
+            }
+        })
+    } else {
+        await $api.department.addDepartment(form.value.name, form.value.region, form.value.description).then(res => {
+            if (res.result === '1') {
+                ElMessage.success('创建成功');
+                display.value = false;
+            } else {
+                ElMessage.error(res.message);
+                console.log(res);
+            }
+        })
+    }
+    if (!props.departmentData) {
+        data.name= '';
+        data.region= '';
+        data.description= '';
+    }
+    display.value = false;
 }
 
 </script>
