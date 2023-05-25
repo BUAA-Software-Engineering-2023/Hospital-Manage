@@ -1,12 +1,12 @@
 <template>
     <div class="container">
-        <el-button type="primary" @click="showDialog" class="button">
+        <el-button type="primary" @click="showDoctorDetail(undefined)" class="button">
             <el-icon class="icon">
                 <Plus/>
             </el-icon>
             添加
         </el-button>
-        <el-button type="danger" @click="" class="button">
+        <el-button type="danger" @click="deleteDoctor" class="button">
             <el-icon class="icon">
                 <DeleteFilled/>
             </el-icon>
@@ -14,13 +14,20 @@
         </el-button>
         <!--write a table with element plus UI with the following columns: department, name, description-->
         <el-table
+                ref="multipleTableRef"
                 :data="tableData"
                 style="width: 100%"
         >
-            <el-table-column type="selection" width="55" />
+            <el-table-column type="selection" width="55"/>
             <el-table-column
                     prop="name"
                     label="姓名"
+                    width="180"
+            >
+            </el-table-column>
+            <el-table-column
+                    prop="gender"
+                    label="性别"
                     width="180"
             >
             </el-table-column>
@@ -31,84 +38,146 @@
             >
             </el-table-column>
             <el-table-column
-                    prop="description"
+                    prop="phone_number"
+                    label="手机号"
+            >
+            </el-table-column>
+            <el-table-column
+                    prop="introduction"
                     label="描述"
             >
             </el-table-column>
+            <el-table-column
+                prop="image"
+                v-if="false"
+            >
+            </el-table-column>
+            <el-table-column
+                prop="id"
+                v-if="false"
+            >
+            </el-table-column>
             <el-table-column align="right" width="100">
-                <el-button type="primary" @click="showDialog">
-                    编辑信息
-                </el-button>
+                <template #default="scope">
+                    <el-button type="primary" @click="showDoctorDetail(scope.row)">
+                        编辑信息
+                    </el-button>
+                </template>
             </el-table-column>
         </el-table>
-        <doctor-detail :display="dialogVisible" @close="closeDialog"/>
+        <doctor-detail v-model="display" :doctor="doctor"/>
     </div>
 </template>
 
 <script setup>
 //give the table data
 import {DeleteFilled, Plus} from "@element-plus/icons-vue";
-import {ref} from "vue";
+import {inject, onMounted, reactive, ref, watch} from "vue";
 import DoctorDetail from "@/views/doctor/DoctorDetail.vue";
-const dialogVisible = ref(false)
+import {ElMessage} from "element-plus";
 
-function showDialog() {
-    dialogVisible.value = true;
+const $api = inject('$api');
+const display = ref(false);
+const tableData = ref([]);
+const departmentList = ref([]);
+const multipleTableRef = ref()
+const doctor = reactive({
+    doctorName: '',
+    doctorDepartment: 0,
+    doctorAvatar: '',
+    doctorDesc: '',
+    doctorPhone: '',
+    doctorGender: '',
+    doctorId: '',
+})
+
+function showDoctorDetail(row) {
+    display.value = true;
+    if (row) {
+        doctor.doctorName = row.name;
+        doctor.doctorDepartment = getDepartmentId(row.department);
+        doctor.doctorDesc = row.introduction;
+        doctor.doctorPhone = row.phone_number;
+        doctor.doctorGender = row.gender;
+        doctor.doctorAvatar = row.image;
+        doctor.doctorId = row.id;
+        // console.log(getDepartmentId(row.department));
+    } else {
+        doctor.doctorName = '';
+        doctor.doctorDepartment = 0;
+        doctor.doctorDesc = '';
+        doctor.doctorPhone = '';
+        doctor.doctorGender = '';
+        doctor.doctorAvatar= '';
+        doctor.doctorId = '';
+    }
 }
 
-function closeDialog() {
-    dialogVisible.value = false;
+watch(display,  async (newVal) => {
+    if (!newVal) {
+        await getDoctorList();
+    }
+});
+
+async function getDoctorList() {
+    const res = await $api.doctor.requestDoctorList();
+    if (res.result !== '1') {
+        ElMessage.error('获取医生列表失败');
+        return;
+    }
+    tableData.value = res.data;
 }
 
-const tableData = [
-    {
-        name: '张三',
-        department: '内科',
-        description: '张三是内科的医生'
-    },
-    {
-        name: '李四',
-        department: '外科',
-        description: '李四是外科的医生'
-    },
-    {
-        name: '王五',
-        department: '儿科',
-        description: '王五是儿科的医生'
-    },
-    {
-        name: '赵六',
-        department: '妇科',
-        description: '赵六是妇科的医生'
-    },
-    {
-        name: '孙七',
-        department: '内科',
-        description: '孙七是内科的医生'
-    },
-    {
-        name: '周八',
-        department: '外科',
-        description: '周八是外科的医生'
-    },
-    {
-        name: '吴九',
-        department: '儿科',
-        description: '吴九是儿科的医生'
-    },
-    {
-        name: '郑十',
-        department: '妇科',
-        description: '郑十是妇科的医生'
-    },
-]
+async function getDepartments() {
+    const res = await $api.department.getDepartmentList();
+    if (res.result !== '1') {
+        console.log(res.message);
+        return;
+    }
+    departmentList.value = res.data;
+}
+
+async function deleteDoctor() {
+    let doctorNames = [];
+    (multipleTableRef.value?.getSelectionRows() ?? []).forEach(item => {
+        doctorNames.push(item.id);
+    })
+    try {
+        const res = await $api.doctor.deleteDoctor(doctorNames);
+        if (res.result !== '1') {
+            ElMessage.error(res.message);
+            return;
+        }
+        ElMessage.success('删除成功');
+        await getDoctorList();
+    } catch (e) {
+        ElMessage.error(e);
+    }
+}
+
+function getDepartmentId(departmentName) {
+    for (let i = 0; i < departmentList.value.length; i++) {
+        for (let j = 0; j < departmentList.value[i].children.length; j++) {
+            if (departmentList.value[i].children[j].name === departmentName) {
+                return departmentList.value[i].children[j].id;
+            }
+        }
+    }
+}
+
+onMounted(async () => {
+    await getDoctorList();
+    await getDepartments();
+})
+
 </script>
 
 <style scoped>
-.button{
+.button {
     margin-bottom: 10px;
 }
-.icon{
+
+.icon {
     margin-right: 6px;
 }
 </style>
