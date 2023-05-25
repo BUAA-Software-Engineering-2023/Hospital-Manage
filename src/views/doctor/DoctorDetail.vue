@@ -62,6 +62,7 @@
                 :ready="cropImage"
                 :zoom="cropImage"
                 :cropmove="cropImage"
+                v-if="imgSrc"
                 style="width: 100%; height: 400px"
         ></vue-cropper>
 
@@ -69,7 +70,7 @@
 				<span class="dialog-footer">
 					<el-button class="crop-demo-btn" type="primary"
           >选择图片
-						<input class="crop-input" type="file" name="image" accept="image/*" @change="setImage" formaction=""/>
+						<input class="crop-input" type="file" name="image" accept="image/*" @change="setImage"/>
 					</el-button>
 					<el-button type="primary" @click="saveAvatar">上传并保存</el-button>
 				</span>
@@ -134,6 +135,17 @@ const onSubmit = async () => {
             ElMessage.error(res.message);
             return;
         }
+        const formData = new FormData();
+        formData.append('doctor_image', dataURLtoFile(doctor.value.doctorAvatar, 'avatar.png'));
+        // formData.append('doctor_image', imgSrc.value);
+        await axios.post(`/api/doctorImage/${res.doctor_id}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': localStorage.getItem('token')
+            }
+        }).catch(err => {
+            console.log(err);
+        })
         ElMessage.success('添加成功');
     } else {
         const res = await $api.doctor.updateDoctor(doctor.value.doctorId, doctor.value.doctorName, doctor.value.doctorDesc, doctor.value.doctorDepartment, doctor.value.doctorPhone, doctor.value.doctorGender);
@@ -141,6 +153,17 @@ const onSubmit = async () => {
             ElMessage.error(res.message);
             return;
         }
+        const formData = new FormData();
+        formData.append('doctor_image', dataURLtoFile(doctor.value.doctorAvatar, 'avatar.png'));
+        // formData.append('doctor_image', imgSrc.value);
+        await axios.post(`/api/doctorImage/${doctor.value.doctorId}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': localStorage.getItem('token')
+            }
+        }).catch(err => {
+            console.log(err);
+        })
         ElMessage.success('修改成功');
     }
 
@@ -172,7 +195,8 @@ const cropper = ref();
 
 const showDialog = () => {
     dialogVisible.value = true;
-    imgSrc.value = doctor.value.doctorAvatar;
+    // imgSrc.value = doctor.value.doctorAvatar;
+    imgSrc.value = '';
 };
 
 const setImage = (e) => {

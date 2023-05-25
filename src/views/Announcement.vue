@@ -44,7 +44,7 @@ export default {
     components: {Notification, Editor, Toolbar},
     computed: {
         initContent() {
-            return '<h1>' + this.title + '</h1>'
+            return '<h1 style="text-align: center;">' + this.title + '</h1><br>'
         }
     },
     watch: {
