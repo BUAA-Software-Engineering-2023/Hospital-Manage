@@ -65,7 +65,7 @@ async function deleteDepartment() {
     })
     try {
         const res = await $api.department.deleteDepartment(departmentNames);
-        if (res.result != '1') {
+        if (res.result !== '1') {
             ElMessage.error(res.message);
             return;
         }
@@ -105,7 +105,7 @@ const tableData = ref<User[]>([])
 
 async function getDepartmentList() {
     const res = await $api.department.getDepartmentList();
-    if (res.result != '1') {
+    if (res.result !== '1') {
         ElMessage.error('获取科室列表失败');
         return;
     }
