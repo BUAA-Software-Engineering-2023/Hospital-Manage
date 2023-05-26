@@ -62,6 +62,8 @@
                 :ready="cropImage"
                 :zoom="cropImage"
                 :cropmove="cropImage"
+                :viewMode="1"
+                :aspectRatio="1"
                 v-if="imgSrc"
                 style="width: 100%; height: 400px"
         ></vue-cropper>
@@ -90,7 +92,6 @@ const $api = inject('$api');
 import {computed, inject, onMounted, ref} from 'vue'
 import {Camera} from "@element-plus/icons-vue";
 import VueCropper from "vue-cropperjs";
-import avatar from "@/assets/img/img.jpg";
 import 'cropperjs/dist/cropper.css';
 import axios from "axios";
 
