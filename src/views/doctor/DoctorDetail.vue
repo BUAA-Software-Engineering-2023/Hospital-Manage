@@ -212,6 +212,7 @@ const setImage = (e) => {
         cropper.value && cropper.value.replace(event.target.result);
     };
     reader.readAsDataURL(file);
+    e.target.value = '';
 };
 
 const cropImage = () => {

@@ -1,51 +1,66 @@
 <template>
     <div class="container">
         <el-table
-            :data="tableData"
-            style="width: 100%"
+                :data="tableData"
+                style="width: 100%"
         >
-            <el-table-column property="name" label="医生姓名" width="120"/>
-            <el-table-column property="startDate" label="请假开始日期" width="120"/>
-            <el-table-column property="endDate" label="请假结束日期" width="120"/>
+            <el-table-column property="doctor_name" label="医生姓名" width="120"/>
+            <el-table-column property="start_time" label="请假开始日期" width="150"/>
+            <el-table-column property="end_time" label="请假结束日期" width="150"/>
             <el-table-column property="type" label="请假类别" width="120"/>
             <el-table-column align="right">
-                <el-button type="primary" @click="showDialog">
-                    处理请求
-                </el-button>
+                <template #default="scope">
+                    <el-button type="primary" @click="showLeaveDetail(scope.row)">
+                        处理请求
+                    </el-button>
+                </template>
             </el-table-column>
         </el-table>
-        <leave-detail :display="dialogVisible" @close="closeDialog"/>
+        <leave-detail v-model="display" :leave="leave"/>
     </div>
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {inject, onMounted, ref, watch} from "vue";
 import LeaveDetail from "./LeaveDetail.vue";
+import {ElMessage} from "element-plus";
 
-const tableData = ref([
-    {
-        name:'淳平大夫',
-        startDate:'2023-5-4',
-        endDate:'2023-5-5',
-        type:'病假'
-    },
-    {
-        name:'田所大夫',
-        startDate:'2023-5-5',
-        endDate:'2023-5-6',
-        type:'事假'
+const $api = inject('$api');
+const display = ref(false);
+const leave = ref({
+    leave_id: '',
+    doctor_name: '',
+    start_time: '',
+    end_time: '',
+    type: '',
+    reason: ''
+});
+
+const tableData = ref([]);
+
+function showLeaveDetail(row) {
+    leave.value = row;
+    display.value = true;
+}
+
+async function getLeaveList() {
+    const res = await $api.leave.getLeaveList();
+    if (res.result !== '1') {
+        console.log('获取请假列表失败');
+        return;
     }
-]);
-
-const dialogVisible = ref(false)
-
-function showDialog() {
-    dialogVisible.value = true;
+    tableData.value = res.data;
 }
 
-function closeDialog() {
-    dialogVisible.value = false;
-}
+onMounted(async () => {
+    await getLeaveList();
+});
+
+watch(display,  async (newVal) => {
+    if (!newVal) {
+        await getLeaveList();
+    }
+});
 </script>
 
 <style scoped>
