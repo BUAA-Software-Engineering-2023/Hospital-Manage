@@ -1,6 +1,6 @@
 <template>
-    <el-dialog width="75%" v-model="props.display" :before-close="handleClose">
-        <el-descriptions title="请假详情" :column="1" border>
+    <el-dialog width="75%" v-model="display">
+        <el-descriptions title="请假详情" :column="3" border>
             <el-descriptions-item>
                 <template #label>
                     <div class="cell-item">
@@ -10,7 +10,7 @@
                         医生姓名
                     </div>
                 </template>
-                淳平大夫
+                {{leave.doctor_name}}
             </el-descriptions-item>
             <el-descriptions-item>
                 <template #label>
@@ -21,7 +21,7 @@
                         请假开始日期
                     </div>
                 </template>
-                2023-5-4
+                {{leave.start_time}}
             </el-descriptions-item>
             <el-descriptions-item>
                 <template #label>
@@ -32,7 +32,7 @@
                         请假结束日期
                     </div>
                 </template>
-                2023-5-5
+                {{leave.end_time}}
             </el-descriptions-item>
             <el-descriptions-item>
                 <template #label>
@@ -43,7 +43,7 @@
                         请假类别
                     </div>
                 </template>
-                <el-tag>病假</el-tag>
+                <el-tag>{{leave.type}}</el-tag>
             </el-descriptions-item>
             <el-descriptions-item>
                 <template #label>
@@ -54,16 +54,17 @@
                         请假原因
                     </div>
                 </template>
-                ASMRのｈsoなシチュエーションボイスが販売されました！！
-                バイノーラル録音のボイスです！こちらは中国では初販売になります！
-                https://shop.geekjack.net/collections/hanazono-serena/products/hanazono-serena-first-challenge-of-binaural-record-huh-situation-voice-voice-complete-set
+                {{leave.reason}}
             </el-descriptions-item>
         </el-descriptions>
         <template #footer>
                 <span class="dialog-footer">
-                    <el-button @click="this.$emit('close',false)">取消</el-button>
-                    <el-button type="primary" @click="this.$emit('close',false)">
+                    <el-button @click="display=false">取消</el-button>
+                    <el-button type="primary" @click="approveLeave">
                       批准请求
+                    </el-button>
+                    <el-button type="danger" @click="denyLeave">
+                      拒绝请求
                     </el-button>
                 </span>
         </template>
@@ -73,20 +74,54 @@
 
 <script setup>
 import {Calendar, Tickets, User} from "@element-plus/icons-vue";
+import {computed, inject} from "vue";
+import {ElMessage} from "element-plus";
 
-const emit = defineEmits(['close']);
-const props = defineProps(['display']);
+let $api = inject('$api');
+const props = defineProps(['modelValue', 'leave']);
+const emit = defineEmits(['update:modelValue', 'update:leave']);
 
-const handleClose = (done) => {
-    emit('close',false)
-    done();
+const display = computed({
+    get() {
+        return props.modelValue;
+    },
+    set(value) {
+        emit('update:modelValue', value);
+    }
+});
+
+const leave = computed({
+    get() {
+        return props.leave;
+    },
+    set(value) {
+        emit('update:leave', value);
+    }
+});
+
+async function approveLeave() {
+    const res = await $api.leave.approveLeave(leave.value.leave_id);
+    if (res.result !== '1') {
+        ElMessage.error('批准请假失败');
+        return;
+    }
+    ElMessage.success(res.message);
+    display.value = false;
 }
 
+async function denyLeave() {
+    const res = await $api.leave.denyLeave(leave.value.leave_id);
+    if (res.result !== '1') {
+        ElMessage.error('拒绝请假失败');
+        return;
+    }
+    ElMessage.success(res.message);
+    display.value = false;
+}
 </script>
 
 <style scoped>
 .cell-item {
-    display: flex;
     align-items: center;
     width: 120px;
 }

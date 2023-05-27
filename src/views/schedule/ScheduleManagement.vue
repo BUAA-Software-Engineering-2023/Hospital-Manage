@@ -38,14 +38,10 @@
                                :value="item.scheduleTime"></el-option>
                 </el-select>
             </el-form-item>
-            <el-row>
-                <el-col :span="2" :offset="19">
+            <el-form-item>
                     <el-button type="primary" @click="onSubmit">提交</el-button>
-                </el-col>
-                <el-col :span="2" :offset="1">
-                    <el-button type="primary" @click="display=false">取消</el-button>
-                </el-col>
-            </el-row>
+                    <el-button @click="display=false">取消</el-button>
+            </el-form-item>
         </el-card>
     </el-dialog>
 </template>
