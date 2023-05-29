@@ -18,7 +18,7 @@ const actions = {
             setToken(result.data.token);
             return "登录成功";
         }
-        return Promise.reject(result.reason);
+        return Promise.reject(result.message);
     }
 }
 
