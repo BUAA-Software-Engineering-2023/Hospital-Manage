@@ -10,12 +10,12 @@ export default {
             }
         });
     },
-    addDoctor(doctor_name, doctor_introduction, doctor_dp_id, doctor_phone, doctor_gender) {
+    addDoctor(doctor_name, doctor_introduction, doctor_dp_id, doctor_phone, doctor_gender, doctor_image) {
         return requests({
             url: '/doctorManage',
             method: 'POST',
             data: {
-                doctor_name, doctor_introduction, doctor_dp_id, doctor_phone, doctor_gender
+                doctor_name, doctor_introduction, doctor_dp_id, doctor_phone, doctor_gender, doctor_image
             }
         });
     },
@@ -28,12 +28,12 @@ export default {
             }
         });
     },
-    updateDoctor(doctor_id, doctor_name, doctor_introduction, doctor_dp_id, doctor_phone, doctor_gender) {
+    updateDoctor(doctor_id, doctor_name, doctor_introduction, doctor_dp_id, doctor_phone, doctor_gender, doctor_image) {
         return requests({
             url: '/doctorManage',
             method: 'PUT',
             data: {
-                doctor_id, doctor_name, doctor_introduction, doctor_dp_id, doctor_phone, doctor_gender
+                doctor_id, doctor_name, doctor_introduction, doctor_dp_id, doctor_phone, doctor_gender, doctor_image
             }
         });
     },
