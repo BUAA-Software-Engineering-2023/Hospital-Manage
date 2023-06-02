@@ -19,4 +19,24 @@ export default {
             }
         });
     },
+    updateAdminInfo(introduction, image){
+        return requests({
+            url: '/adminIntroduction',
+            method: 'POST',
+            data: {
+                user_name: localStorage.getItem('ms_username'),
+                introduction, image
+            }
+        });
+    },
+    changeAdminPassword(old_password, new_password){
+        return requests({
+            url: '/changeAdminPasswd',
+            method: 'POST',
+            data: {
+                user_name: localStorage.getItem('ms_username'),
+                old_password, new_password
+            }
+        });
+    },
 }

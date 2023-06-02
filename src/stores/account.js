@@ -25,10 +25,28 @@ const actions = {
         const result = await adminApi.getAdminInfo();
         if (result.result === '1') {
             this.adminInfo = result.data;
+            console.log(result.data)
             return "获取成功";
         }
         return Promise.reject(result.message);
-    }
+    },
+
+    async updateAdminInfo(introduction, image) {
+        const result = await adminApi.updateAdminInfo(introduction, image);
+        if (result.result === '1') {
+            this.adminInfo = result.data;
+            return "更新成功";
+        }
+        return Promise.reject(result.message);
+    },
+
+    async changeAdminPassword(old_password, new_password) {
+        const result = await adminApi.changeAdminPassword(old_password, new_password);
+        if (result.result === '1') {
+            return "修改成功";
+        }
+        return Promise.reject(result.message);
+    },
 }
 
 const getters = {

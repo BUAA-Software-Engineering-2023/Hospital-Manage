@@ -8,15 +8,17 @@
               <span>基础信息</span>
             </div>
           </template>
-          <div class="info">
-            <div class="info-image" @click="showDialog">
+          <div>
+            <div class="avatar" @click="showDialog">
               <el-avatar :size="100" :src="avatarImg"/>
-              <span class="info-edit">
+              <span class="avatar-edit">
 								<el-icon><Camera/></el-icon>
 							</span>
             </div>
-            <div class="info-name">{{ name }}</div>
-            <div class="info-desc">{{form.desc}}</div>
+            <div class="info">
+              <div class="info-name">{{ name }}</div>
+              <div class="info-desc">{{ form.desc }}</div>
+            </div>
           </div>
         </el-card>
       </el-col>
@@ -45,24 +47,36 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-dialog title="裁剪图片" v-model="dialogVisible" width="600px">
+    <el-dialog title="裁剪图片" v-model="dialogVisible" width="600px" align-center>
       <vue-cropper
           ref="cropper"
-          :src="imgSrc"
           :ready="cropImage"
           :zoom="cropImage"
           :cropmove="cropImage"
-          style="width: 100%; height: 400px"
+          :crop="cropImage"
+          :viewMode="1"
+          :aspectRatio="1"
+          dragMode="move"
+          v-if="selected"
+          style="width: 100%; height: 400px; text-align: center"
       ></vue-cropper>
-
+      <el-upload
+          drag
+          :on-change="setImage"
+          :auto-upload="false"
+          accept="image/*"
+          :show-file-list="false"
+          v-else
+      >
+        <el-icon class="el-icon--upload">
+          <upload-filled/>
+        </el-icon>
+        <div>
+          请选择一张图片
+        </div>
+      </el-upload>
       <template #footer>
-				<span class="dialog-footer">
-					<el-button class="crop-demo-btn" type="primary"
-          >选择图片
-						<input class="crop-input" type="file" name="image" accept="image/*" @change="setImage"/>
-					</el-button>
-					<el-button type="primary" @click="saveAvatar">上传并保存</el-button>
-				</span>
+        <el-button type="primary" @click="saveAvatar">上传并保存</el-button>
       </template>
     </el-dialog>
   </div>
@@ -72,8 +86,10 @@
 import {onMounted, reactive, ref} from 'vue';
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
-import avatar from '../assets/img/img.jpg';
 import {useAccountStore} from "../stores/account.js";
+import {Camera, UploadFilled} from "@element-plus/icons-vue";
+import axios from "axios";
+import {ElMessage} from "element-plus";
 
 const name = localStorage.getItem('ms_username');
 const form = ref({
@@ -81,47 +97,83 @@ const form = ref({
   new: '',
   desc: '',
 });
-const onSubmit = () => {
+const onSubmit = async () => {
+  if (form.value.old !== '' || form.value.new !== '') {
+    try {
+      const res = await useAccountStore().changeAdminPassword(form.value.old, form.value.new);
+      if (res !== '更新成功'){
+        ElMessage.error(res);
+        return;
+      }
+    } catch (e) {
+      ElMessage.error(e);
+      console.log(e)
+      return;
+    }
+  }
+  try {
+    const res = await useAccountStore().updateAdminInfo(form.value.desc, avatarImg.value);
+    if (res === '更新成功'){
+      ElMessage.success(res);
+    } else {
+      ElMessage.error(res);
+    }
+  } catch (e) {
+    ElMessage.error('更新失败');
+  }
 };
 
-const avatarImg = ref(avatar);
-const imgSrc = ref('');
-const cropImg = ref('');
+const avatarImg = ref('');
 const dialogVisible = ref(false);
 const cropper: any = ref();
+const selected = ref();
+let imageFile;
 
 const showDialog = () => {
   dialogVisible.value = true;
-  imgSrc.value = avatarImg.value;
+  selected.value = false;
 };
 
-const setImage = (e: any) => {
-  const file = e.target.files[0];
-  if (!file.type.includes('image/')) {
-    return;
-  }
+const setImage = uploadFile => {
   const reader = new FileReader();
   reader.onload = (event: any) => {
-    dialogVisible.value = true;
-    imgSrc.value = event.target.result;
     cropper.value && cropper.value.replace(event.target.result);
   };
-  reader.readAsDataURL(file);
+  reader.readAsDataURL(uploadFile.raw);
+  selected.value = true;
 };
 
 const cropImage = () => {
-  cropImg.value = cropper.value.getCroppedCanvas().toDataURL();
+  cropper.value.getCroppedCanvas({
+    width: 512,
+    height: 512,
+    imageSmoothingQuality: "high"
+  }).toBlob(blob => imageFile = new File([blob], "avatar.png"));
 };
 
-const saveAvatar = () => {
-  avatarImg.value = cropImg.value;
+const saveAvatar = async () => {
+  const formData = new FormData();
+  formData.append('image', imageFile);
+  try {
+    const result = await axios.post("/api/uploadImage", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': localStorage.getItem('ms_token')
+      }
+    });
+    console.log(result);
+    avatarImg.value = result.data.data.url;
+  } catch (e) {
+    ElMessage.error('图片上传失败');
+  }
   dialogVisible.value = false;
 };
 
 onMounted(async () => {
   try {
     await useAccountStore().getAdminInfo();
-    form.value.desc = useAccountStore().adminInfo;
+    form.value.desc = useAccountStore().adminInfo.introduction;
+    avatarImg.value = useAccountStore().adminInfo.image;
   } catch (e) {
     console.log(e);
   }
@@ -134,18 +186,26 @@ onMounted(async () => {
   padding: 35px 0;
 }
 
-.info-image {
-  position: relative;
+.info-name {
+  margin: 15px 0 10px;
+  font-size: 24px;
+  font-weight: 500;
+  color: #262626;
+}
+
+.avatar {
+  text-align: center;
   margin: auto;
+  position: relative;
   width: 100px;
   height: 100px;
   background: #f8f8f8;
   border: 1px solid #eee;
-  border-radius: 50px;
+  border-radius: 50%;
   overflow: hidden;
 }
 
-.info-edit {
+.avatar-edit {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -159,33 +219,12 @@ onMounted(async () => {
   transition: opacity 0.3s ease;
 }
 
-.info-edit i {
+.avatar-edit i {
   color: #eee;
   font-size: 25px;
 }
 
-.info-image:hover .info-edit {
+.avatar:hover .avatar-edit {
   opacity: 1;
-}
-
-.info-name {
-  margin: 15px 0 10px;
-  font-size: 24px;
-  font-weight: 500;
-  color: #262626;
-}
-
-.crop-demo-btn {
-  position: relative;
-}
-
-.crop-input {
-  position: absolute;
-  width: 100px;
-  height: 40px;
-  left: 0;
-  top: 0;
-  opacity: 0;
-  cursor: pointer;
 }
 </style>
