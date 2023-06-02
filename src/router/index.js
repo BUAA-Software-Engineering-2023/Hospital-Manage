@@ -93,6 +93,10 @@ const routes = [
         },
         component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
     },
+    {
+        path: '/:error*',
+        component: ()=>import('@/views/404.vue')
+    },
 ];
 
 const router = createRouter({

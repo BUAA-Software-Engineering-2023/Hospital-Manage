@@ -19,6 +19,15 @@ const actions = {
             return "登录成功";
         }
         return Promise.reject(result.message);
+    },
+
+    async getAdminInfo() {
+        const result = await adminApi.getAdminInfo();
+        if (result.result === '1') {
+            this.adminInfo = result.data;
+            return "获取成功";
+        }
+        return Promise.reject(result.message);
     }
 }
 
