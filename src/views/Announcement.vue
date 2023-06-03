@@ -22,7 +22,7 @@
             <el-col :span="4">
                 <el-upload
                         v-model:file-list="fileList"
-                        action="/api/uploadImage"
+                        action="http://azure.pesenteur.eu.org:5555/api/uploadImage"
                         class="upload-demo"
                         name="image"
                         list-type="picture"
@@ -34,7 +34,7 @@
                     <el-button type="primary">点击上传封面图片</el-button>
                 </el-upload>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="5">
                 <p style="margin-top: 3px">是否选择此图为轮播图：</p>
             </el-col>
             <el-col :span="4">
@@ -106,7 +106,7 @@ const storeImage: UploadProps['onSuccess'] = (res, file, fileList) => {
 }
 
 editorConfig.MENU_CONF['uploadImage'] = {
-    server: '/api/uploadImage',
+    server: 'http://azure.pesenteur.eu.org:5555/api/uploadImage',
     fieldName: 'image'
 }
 

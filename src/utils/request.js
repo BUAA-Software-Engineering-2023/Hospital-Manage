@@ -4,7 +4,7 @@ import {ElMessage} from "element-plus";
 import {clearToken} from "../utils/token.js";
 
 const requests = axios.create({
-    baseURL: '/api',
+    baseURL: 'http://azure.pesenteur.eu.org:5555/api',
     timeout: 5000
 });
 
