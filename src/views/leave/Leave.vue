@@ -59,6 +59,7 @@ onMounted(async () => {
 watch(display,  async (newVal) => {
     if (!newVal) {
         await getLeaveList();
+        location.reload();
     }
 });
 </script>

@@ -24,5 +24,11 @@ export default {
                 leave_id
             }
         });
+    },
+    getProcessedLeaveList() {
+        return requests({
+            url: '/processedLeave',
+            method: 'GET'
+        });
     }
 }

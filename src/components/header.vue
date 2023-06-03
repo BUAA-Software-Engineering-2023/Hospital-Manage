@@ -12,7 +12,7 @@
 				<div class="btn-bell" @click="router.push('/information')">
 					<el-tooltip
 						effect="dark"
-						:content="message ? `有${message}条未读消息` : `消息中心`"
+						:content="message ? `有${message}个未处理请求` : `消息中心`"
 						placement="bottom"
 					>
 						<el-icon><Bell /></el-icon>
@@ -20,7 +20,7 @@
 					<span class="btn-bell-badge" v-if="message"></span>
 				</div>
 				<!-- 用户头像 -->
-				<el-avatar class="user-avator" :size="30" :src="imgurl" />
+				<el-avatar class="user-avator" :size="30" :src="avatar" />
 				<!-- 用户名下拉菜单 -->
 				<el-dropdown class="user-name" trigger="click" @command="handleCommand">
 					<span class="el-dropdown-link">
@@ -44,27 +44,33 @@
 	</div>
 </template>
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import {inject, onMounted, ref} from 'vue';
 import { useSidebarStore } from '../stores/sidebar.js';
 import { useRouter } from 'vue-router';
-import imgurl from '../assets/img/img.jpg';
 import {ArrowDown, Bell, Expand, Fold} from "@element-plus/icons-vue";
 import { ElDropdown, ElDropdownItem, ElDropdownMenu, ElIcon, ElTooltip, ElAvatar} from 'element-plus';
 import {clearToken} from "../utils/token.js";
+import {useAccountStore} from "../stores/account.js";
 
 const username: string | null = localStorage.getItem('ms_username');
-const message: number = 2;
 
 const sidebar = useSidebarStore();
+const avatar = ref('');
+const $api = inject('$api');
+const message = ref(0);
 // 侧边栏折叠
 const collapseChage = () => {
 	sidebar.handleCollapse();
 };
 
-onMounted(() => {
+onMounted(async () => {
 	if (document.body.clientWidth < 1500) {
 		collapseChage();
 	}
+    await useAccountStore().getAdminInfo();
+    avatar.value = useAccountStore().adminInfo.image;
+    const res = await $api.leave.getLeaveList();
+    message.value = res.data.length;
 });
 
 // 用户名下拉菜单选择事件

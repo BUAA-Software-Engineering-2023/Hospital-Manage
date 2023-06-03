@@ -22,11 +22,6 @@ requests.interceptors.response.use(response=>response.data, error => {
             message: 'token失效，请重新登录',
             type: 'error'
         });
-    } else {
-        ElMessage({
-            message: '请检查网络连接',
-            type: 'error'
-        });
     }
     return error.response.data;
 });

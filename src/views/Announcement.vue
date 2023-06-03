@@ -115,6 +115,18 @@ async function publishNotification() {
     const html = editor.getHtml();
     const summary = editor.getText().slice(0, 100);
     console.log(html);
+    if (imageUrl.value === '') {
+        ElMessage.error('请上传封面图片');
+        return;
+    }
+    if (title.value === '') {
+        ElMessage.error('请输入标题');
+        return;
+    }
+    if (summary === '') {
+        ElMessage.error('请输入通知内容');
+        return;
+    }
     const res = await $api.announcement.publishNotification(imageUrl.value, html, title.value, type.value, summary);
     if (res.result !== '1') {
         ElMessage.error('发布失败');
@@ -133,6 +145,18 @@ async function publishNews() {
     const html = editor.getHtml();
     const summary = editor.getText().slice(0, 100);
     console.log(html);
+    if (imageUrl.value === '') {
+        ElMessage.error('请上传封面图片');
+        return;
+    }
+    if (title.value === '') {
+        ElMessage.error('请输入标题');
+        return;
+    }
+    if (summary === '') {
+        ElMessage.error('请输入新闻内容');
+        return;
+    }
     const res = await $api.announcement.publishNews(imageUrl.value, html, title.value, type.value, summary);
     if (res.result !== '1') {
         ElMessage.error('发布失败');
