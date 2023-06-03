@@ -148,6 +148,7 @@ async function updateVancancy() {
         ElMessage.error('更新放号数量失败');
         return;
     }
+    await getVacancyList();
     ElMessage.success(res.message);
 }
 

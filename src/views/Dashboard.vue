@@ -4,7 +4,7 @@
 			<el-col :span="8">
 				<el-card shadow="hover" class="mgb20" style="height: 252px">
 					<div class="user-info">
-						<el-avatar :size="120" :src="imgurl" />
+						<el-avatar :size="120" :src="avatar" />
 						<div class="user-info-cont">
 							<div class="user-info-name">{{ name }}</div>
 							<div>管理员</div>
@@ -65,12 +65,20 @@
 </template>
 
 <script setup>
-import imgurl from '../assets/img/img.jpg';
+
+import {ChatDotRound, Loading, User} from "@element-plus/icons-vue";
 
 const name = localStorage.getItem('ms_username');
 
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
+import {useAccountStore} from "@/stores/account.js";
 const value = ref(new Date())
+const avatar = ref('')
+
+onMounted(async () => {
+    await useAccountStore().getAdminInfo();
+    avatar.value = useAccountStore().adminInfo.image;
+})
 
 </script>
 
