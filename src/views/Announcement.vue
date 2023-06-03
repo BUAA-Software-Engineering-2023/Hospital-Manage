@@ -8,8 +8,11 @@
                     </el-icon>
                     <span style="margin-left: 5px"><strong>编辑公告</strong></span>
                 </el-col>
-                <el-col :span="5" :offset="15">
+                <el-col :span="2" :offset="15">
                     <el-button type="primary" @click="publishNotification">发布为通知</el-button>
+
+                </el-col>
+                <el-col :span="2" :offset="1">
                     <el-button type="primary" @click="publishNews">发布为新闻</el-button>
                 </el-col>
             </el-row>
