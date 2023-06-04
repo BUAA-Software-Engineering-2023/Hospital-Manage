@@ -45,6 +45,7 @@
             <el-table-column
                     prop="introduction"
                     label="描述"
+                    show-overflow-tooltip
             >
             </el-table-column>
             <el-table-column

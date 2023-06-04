@@ -159,7 +159,7 @@ const saveAvatar = async () => {
         const result = await axios.post("http://azure.pesenteur.eu.org:5555/api/uploadImage", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
-                'Authorization': localStorage.getItem('ms_token')
+                'Authorization': localStorage.getItem('TOKEN')
             }
         });
         console.log(result);
