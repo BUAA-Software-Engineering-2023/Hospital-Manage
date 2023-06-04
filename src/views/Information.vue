@@ -47,9 +47,6 @@ onMounted(async () => {
     state.value.unread = res.data;
     res = await $api.leave.getProcessedLeaveList();
     state.value.read = res.data;
-    for (let i = 0; i < state.value.read.length; i++) {
-        state.value.read[i].status = (state.value.read[i].status === 'approved' || state.value.read[i].status === 'Approved') ? '已同意' : '已拒绝';
-    }
 });
 
 function toHandle() {
