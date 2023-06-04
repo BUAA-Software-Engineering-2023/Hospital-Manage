@@ -3,12 +3,12 @@ name: deployment
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     types:
       - closed
     branches:
-      - main
+      - master
   workflow_dispatch: # 允许手动运行，便于调试
 # 任务
 jobs:
