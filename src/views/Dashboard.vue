@@ -181,7 +181,7 @@ onMounted(async () => {
 	color: #999;
 }
 
-.test /deep/  .el-calendar-table .el-calendar-day{
+.test :deep(.el-calendar-table .el-calendar-day){
 	width: 60px;
 	height: 40px;
 }
