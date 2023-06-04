@@ -1,9 +1,9 @@
 <template>
-	<div class="tags" v-if="Tags.show">
+	<div class="tags" v-if="tags.show">
 		<ul>
 			<li
 				class="tags-li"
-				v-for="(item, index) in Tags.list"
+				v-for="(item, index) in tags.list"
 				:class="{ active: isActive(item.path) }"
 				:key="index"
 			>
@@ -44,9 +44,9 @@ const isActive = (path: string) => {
 const tags = useTagsStore();
 // 关闭单个标签
 const closeTags = (index: number) => {
-	const delItem = Tags.list[index];
-	Tags.delTagsItem(index);
-	const item = Tags.list[index] ? Tags.list[index] : Tags.list[index - 1];
+	const delItem = tags.list[index];
+	tags.delTagsItem(index);
+	const item = tags.list[index] ? tags.list[index] : tags.list[index - 1];
 	if (item) {
 		delItem.path === route.fullPath && router.push(item.path);
 	} else {
@@ -56,12 +56,12 @@ const closeTags = (index: number) => {
 
 // 设置标签
 const setTags = (route: any) => {
-	const isExist = Tags.list.some(item => {
+	const isExist = tags.list.some(item => {
 		return item.path === route.fullPath;
 	});
 	if (!isExist) {
-		if (Tags.list.length >= 8) Tags.delTagsItem(0);
-		Tags.setTagsItem({
+		if (tags.list.length >= 8) tags.delTagsItem(0);
+		tags.setTagsItem({
 			name: route.name,
 			title: route.meta.title,
 			path: route.fullPath
@@ -75,15 +75,15 @@ onBeforeRouteUpdate(to => {
 
 // 关闭全部标签
 const closeAll = () => {
-	Tags.clearTags();
+	tags.clearTags();
 	router.push('/');
 };
 // 关闭其他标签
 const closeOther = () => {
-	const curItem = Tags.list.filter(item => {
+	const curItem = tags.list.filter(item => {
 		return item.path === route.fullPath;
 	});
-	Tags.closeTagsOther(curItem);
+	tags.closeTagsOther(curItem);
 };
 const handleTags = (command: string) => {
 	command === 'other' ? closeOther() : closeAll();
