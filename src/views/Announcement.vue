@@ -29,6 +29,7 @@
                         accept="image/*"
                         :on-success="storeImage"
                         :limit="1"
+                        :headers="header"
                         ref="imageUploader"
                 >
                     <el-button type="primary">点击上传封面图片</el-button>
@@ -82,6 +83,9 @@ const toolbarConfig = {};
 const editorConfig = {placeholder: '请输入内容...', MENU_CONF: {}};
 const imageUrl = ref('');
 const type = ref('1');
+const header = {
+    "Authorization": localStorage.getItem('TOKEN')
+};
 
 // 组件销毁时，也及时销毁编辑器
 onBeforeUnmount(() => {
@@ -98,6 +102,7 @@ const fileList = ref<UploadUserFile[]>([])
 
 const storeImage: UploadProps['onSuccess'] = (res, file, fileList) => {
     if (res.result !== '1') {
+        console.log(res);
         ElMessage.error('上传失败');
         return;
     }
@@ -107,7 +112,10 @@ const storeImage: UploadProps['onSuccess'] = (res, file, fileList) => {
 
 editorConfig.MENU_CONF['uploadImage'] = {
     server: 'http://azure.pesenteur.eu.org:5555/api/uploadImage',
-    fieldName: 'image'
+    fieldName: 'image',
+    headers: {
+        "Authorization": localStorage.getItem('TOKEN')
+    },
 }
 
 const imageUploader = ref<HTMLElement>()
