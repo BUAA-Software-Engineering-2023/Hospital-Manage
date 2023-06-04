@@ -73,9 +73,10 @@
 <script setup>
 //give the table data
 import {DeleteFilled, Plus} from "@element-plus/icons-vue";
-import {inject, onMounted, reactive, ref, watch} from "vue";
+import {inject, nextTick, onMounted, reactive, ref, watch} from "vue";
 import DoctorDetail from "@/views/doctor/DoctorDetail.vue";
 import {ElMessage} from "element-plus";
+import useCustomLoading from "../../utils/loading.js";
 
 const $api = inject('$api');
 const display = ref(false);
@@ -116,6 +117,10 @@ function showDoctorDetail(row) {
 
 watch(display,  async (newVal) => {
     if (!newVal) {
+        useCustomLoading().start({
+            fullscreen: true,
+            text: '加载中，请稍后'
+        });
         await getDoctorList();
     }
 });
@@ -127,6 +132,8 @@ async function getDoctorList() {
         return;
     }
     tableData.value = res.data;
+    await nextTick();
+    useCustomLoading().end();
 }
 
 async function getDepartments() {
@@ -150,6 +157,10 @@ async function deleteDoctor() {
             return;
         }
         ElMessage.success('删除成功');
+        useCustomLoading().start({
+            fullscreen: true,
+            text: '加载中，请稍后'
+        });
         await getDoctorList();
     } catch (e) {
         ElMessage.error(e);

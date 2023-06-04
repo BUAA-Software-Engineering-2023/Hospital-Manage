@@ -1,5 +1,7 @@
-import {createRouter, createWebHashHistory} from 'vue-router';
+import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router';
 import Home from '../views/Home.vue';
+import useCustomLoading from "@/utils/loading.js";
+import {nextTick} from "vue";
 
 const routes = [
     {
@@ -24,6 +26,7 @@ const routes = [
                 name: 'department',
                 meta: {
                     title: '科室管理',
+                    loading: true
                 },
                 component: () => import(/* webpackChunkName: "department" */ '../views/department/Department.vue'),
             },
@@ -32,6 +35,7 @@ const routes = [
                 name: 'doctor',
                 meta: {
                     title: '医生管理',
+                    loading: true
                 },
                 component: () => import(/* webpackChunkName: "department" */ '../views/doctor/Doctor.vue'),
             },
@@ -40,6 +44,7 @@ const routes = [
                 name: 'schedule',
                 meta: {
                     title: '出诊排班',
+                    loading: true
                 },
                 component: () => import(/* webpackChunkName: "department" */ '../views/schedule/Schedule.vue'),
             },
@@ -48,6 +53,7 @@ const routes = [
                 name: 'vacancy',
                 meta: {
                     title: '放号管理',
+                    loading: true
                 },
                 component: () => import(/* webpackChunkName: "department" */ '../views/Vacancy.vue'),
             },
@@ -56,6 +62,7 @@ const routes = [
                 name: 'leave',
                 meta: {
                     title: '医生请假',
+                    loading: true
                 },
                 component: () => import(/* webpackChunkName: "department" */ '../views/leave/Leave.vue'),
             },
@@ -72,6 +79,7 @@ const routes = [
                 name: 'information',
                 meta: {
                     title: '消息系统',
+                    loading: true
                 },
                 component: () => import(/* webpackChunkName: "tabs" */ '../views/Information.vue'),
             },
@@ -100,11 +108,15 @@ const routes = [
 ];
 
 const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes,
 });
 
 router.beforeEach((to, from, next) => {
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
     document.title = `${to.meta.title} | hospital-manage`;
     const token = localStorage.getItem('TOKEN');
     if (!token && to.path !== '/login') {
@@ -114,5 +126,12 @@ router.beforeEach((to, from, next) => {
         next();
     }
 });
+
+router.afterEach(to=> {
+    if (!to.meta.loading) {
+        nextTick(useCustomLoading().end).then(() => {});
+    }
+});
+
 
 export default router;

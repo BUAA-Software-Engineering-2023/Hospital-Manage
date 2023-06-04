@@ -37,10 +37,11 @@
 
 <script setup lang="ts">
 
-import {inject, onMounted, ref, watch} from "vue";
+import {inject, nextTick, onMounted, ref, watch} from "vue";
 import {DeleteFilled, Plus} from "@element-plus/icons-vue";
 import DepartmentDetail from "./DepartmentDetail.vue";
 import {ElMessage, ElTable} from "element-plus";
+import useCustomLoading from "../../utils/loading.js";
 
 const $api = inject('$api');
 
@@ -140,10 +141,16 @@ async function getDepartmentList() {
     })
     console.log(result)
     tableData.value = result;
+    await nextTick();
+    useCustomLoading().end();
 }
 
 watch(display, async (newVal) => {
     if (!newVal) {
+        useCustomLoading().start({
+            fullscreen: true,
+            text: '加载中，请稍后'
+        });
          await getDepartmentList();
     }
 })

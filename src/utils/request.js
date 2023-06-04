@@ -20,11 +20,13 @@ requests.interceptors.response.use(response => response.data, error => {
             message: '请求超时',
             type: 'error'
         });
+        return;
     } else if (error.code === 'ERR_NETWORK') {
         ElMessage({
             message: '网络错误',
             type: 'error'
         });
+        return;
     } else if (error.response && error.response.status === 401) {
         localStorage.removeItem('ms_username');
         clearToken();
