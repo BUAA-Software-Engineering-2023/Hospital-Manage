@@ -21,9 +21,9 @@
 </template>
 
 <script setup>
-import {inject, onMounted, ref, watch} from "vue";
+import {inject, nextTick, onMounted, ref, watch} from "vue";
 import LeaveDetail from "./LeaveDetail.vue";
-import {ElMessage} from "element-plus";
+import useCustomLoading from "../../utils/loading.js";
 
 const $api = inject('$api');
 const display = ref(false);
@@ -50,6 +50,8 @@ async function getLeaveList() {
         return;
     }
     tableData.value = res.data;
+    await nextTick();
+    useCustomLoading().end();
 }
 
 onMounted(async () => {
@@ -58,6 +60,10 @@ onMounted(async () => {
 
 watch(display,  async (newVal) => {
     if (!newVal) {
+        useCustomLoading().start({
+            fullscreen: true,
+            text: '加载中，请稍后'
+        });
         await getLeaveList();
         location.reload();
     }

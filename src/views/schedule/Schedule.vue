@@ -36,9 +36,10 @@
 </template>
 
 <script setup>
-import {inject, onMounted, reactive, ref, watch} from 'vue'
+import {inject, nextTick, onMounted, reactive, ref, watch} from 'vue'
 import {Search} from "@element-plus/icons-vue";
 import ScheduleManagement from "@/views/schedule/ScheduleManagement.vue";
+import useCustomLoading from "../../utils/loading.js";
 
 const $api = inject('$api');
 const display = ref(false)
@@ -99,6 +100,8 @@ async function getDoctorList() {
         console.log(doctor_s)
         doctorList.value.push(doctor_s);
     }
+    await nextTick();
+    useCustomLoading().end();
 }
 
 onMounted(async () => {
@@ -107,6 +110,10 @@ onMounted(async () => {
 
 watch(display, async (newVal) => {
     if (newVal === false) {
+        useCustomLoading().start({
+            fullscreen: true,
+            text: '加载中，请稍后'
+        });
         await getDoctorList();
     }
 })

@@ -32,8 +32,9 @@
 </template>
 
 <script setup>
-import {inject, onMounted, ref} from 'vue';
+import {inject, nextTick, onMounted, ref} from 'vue';
 import router from "@/router/index.js";
+import useCustomLoading from "@/utils/loading.js";
 
 const $api = inject('$api');
 const message = ref('first');
@@ -47,6 +48,8 @@ onMounted(async () => {
     state.value.unread = res.data;
     res = await $api.leave.getProcessedLeaveList();
     state.value.read = res.data;
+    await nextTick();
+    useCustomLoading().end();
 });
 
 function toHandle() {

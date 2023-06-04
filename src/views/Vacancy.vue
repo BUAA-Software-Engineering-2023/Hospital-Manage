@@ -31,8 +31,9 @@
 </template>
 
 <script setup>
-import {inject, onMounted, ref, watch} from 'vue'
+import {inject, nextTick, onMounted, ref, watch} from 'vue'
 import {ElMessage} from "element-plus";
+import useCustomLoading from "../utils/loading.js";
 
 const day = ref()
 const $api = inject('$api');
@@ -133,6 +134,8 @@ async function getVacancyList() {
             }
         }
     }
+    await nextTick();
+    useCustomLoading().end();
 }
 
 async function updateVancancy() {
@@ -148,16 +151,24 @@ async function updateVancancy() {
         ElMessage.error('更新放号数量失败');
         return;
     }
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
     await getVacancyList();
     ElMessage.success(res.message);
 }
 
-onMounted( async () => {
+onMounted( () => {
     day.value = 1
-    await getVacancyList();
+    getVacancyList();
 })
 
 watch(day, async () => {
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
     await getVacancyList();
 })
 </script>
