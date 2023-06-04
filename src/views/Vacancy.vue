@@ -33,7 +33,7 @@
 <script setup>
 import {inject, nextTick, onMounted, ref, watch} from 'vue'
 import {ElMessage} from "element-plus";
-import useCustomLoading from "../utils/loading.js";
+import useCustomLoading from "@/utils/loading.js";
 
 const day = ref()
 const $api = inject('$api');

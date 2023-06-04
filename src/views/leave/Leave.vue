@@ -22,8 +22,8 @@
 
 <script setup>
 import {inject, nextTick, onMounted, ref, watch} from "vue";
-import LeaveDetail from "./LeaveDetail.vue";
-import useCustomLoading from "../../utils/loading.js";
+import LeaveDetail from "@/views/leave/LeaveDetail.vue";
+import useCustomLoading from "@/utils/loading.js";
 
 const $api = inject('$api');
 const display = ref(false);

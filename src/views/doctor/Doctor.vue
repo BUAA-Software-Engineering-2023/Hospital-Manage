@@ -76,7 +76,7 @@ import {DeleteFilled, Plus} from "@element-plus/icons-vue";
 import {inject, nextTick, onMounted, reactive, ref, watch} from "vue";
 import DoctorDetail from "@/views/doctor/DoctorDetail.vue";
 import {ElMessage} from "element-plus";
-import useCustomLoading from "../../utils/loading.js";
+import useCustomLoading from "@/utils/loading.js";
 
 const $api = inject('$api');
 const display = ref(false);
