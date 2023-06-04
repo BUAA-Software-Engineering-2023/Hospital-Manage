@@ -8,13 +8,24 @@ const requests = axios.create({
     timeout: 5000
 });
 
-requests.interceptors.request.use(config=>{
+requests.interceptors.request.use(config => {
     config.headers['Authorization'] = localStorage.getItem('TOKEN');
     return config;
 });
 
-requests.interceptors.response.use(response=>response.data, error => {
-    if (error.response.status === 401) {
+requests.interceptors.response.use(response => response.data, error => {
+    console.log(error)
+    if (error.code === 'ECONNABORTED') {
+        ElMessage({
+            message: '请求超时',
+            type: 'error'
+        });
+    } else if (error.code === 'ERR_NETWORK') {
+        ElMessage({
+            message: '网络错误',
+            type: 'error'
+        });
+    } else if (error.response && error.response.status === 401) {
         localStorage.removeItem('ms_username');
         clearToken();
         router.push('/login').then();
