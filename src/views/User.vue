@@ -82,11 +82,11 @@
     </div>
 </template>
 
-<script setup lang="ts">
-import {onMounted, reactive, ref} from 'vue';
+<script setup>
+import {onMounted, ref} from 'vue';
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
-import {useAccountStore} from "../stores/account.js";
+import {useAccountStore} from "@/stores/account.js";
 import {Camera, UploadFilled} from "@element-plus/icons-vue";
 import axios from "axios";
 import {ElMessage} from "element-plus";
@@ -126,7 +126,7 @@ const onSubmit = async () => {
 
 const avatarImg = ref('');
 const dialogVisible = ref(false);
-const cropper: any = ref();
+const cropper = ref();
 const selected = ref();
 let imageFile;
 
@@ -137,7 +137,7 @@ const showDialog = () => {
 
 const setImage = uploadFile => {
     const reader = new FileReader();
-    reader.onload = (event: any) => {
+    reader.onload = (event) => {
         cropper.value && cropper.value.replace(event.target.result);
     };
     reader.readAsDataURL(uploadFile.raw);

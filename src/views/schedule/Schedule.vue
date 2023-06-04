@@ -39,7 +39,7 @@
 import {inject, nextTick, onMounted, reactive, ref, watch} from 'vue'
 import {Search} from "@element-plus/icons-vue";
 import ScheduleManagement from "@/views/schedule/ScheduleManagement.vue";
-import useCustomLoading from "../../utils/loading.js";
+import useCustomLoading from "@/utils/loading.js";
 
 const $api = inject('$api');
 const display = ref(false)

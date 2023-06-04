@@ -69,7 +69,6 @@ import '@wangeditor/editor/dist/css/style.css'; // 引入 css
 import {onBeforeUnmount, ref, shallowRef, inject} from 'vue';
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue';
 import {Notification} from "@element-plus/icons-vue";
-import type {UploadProps, UploadUserFile} from 'element-plus'
 import {ElMessage} from "element-plus";
 
 const $api = inject('$api');
@@ -98,9 +97,9 @@ const handleCreated = (editor) => {
     editorRef.value = editor; // 记录 editor 实例，重要！
 };
 
-const fileList = ref<UploadUserFile[]>([])
+const fileList = ref([])
 
-const storeImage: UploadProps['onSuccess'] = (res, file, fileList) => {
+const storeImage = (res, file, fileList) => {
     if (res.result !== '1') {
         console.log(res);
         ElMessage.error('上传失败');

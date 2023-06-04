@@ -30,27 +30,21 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import {ref, reactive} from 'vue';
-import {useAccountStore} from "../stores/account.js";
-import {useTagsStore} from '../stores/tags.js';
+import {useAccountStore} from "@/stores/account.js";
+import {useTagsStore} from '@/stores/tags.js';
 import {useRouter} from 'vue-router';
 import {ElMessage} from 'element-plus';
-import type {FormInstance, FormRules} from 'element-plus';
 import {Lock, User} from '@element-plus/icons-vue';
 
-interface LoginInfo {
-    username: string;
-    password: string;
-}
-
 const router = useRouter();
-const param = reactive<LoginInfo>({
+const param = reactive({
     username: 'admin',
     password: '123456'
 });
 
-const rules: FormRules = {
+const rules = {
     username: [
         {
             required: true,
@@ -61,10 +55,10 @@ const rules: FormRules = {
     password: [{required: true, message: '请输入密码', trigger: 'blur'}]
 };
 
-const login = ref<FormInstance>();
-const submitForm = (formEl: FormInstance | undefined) => {
+const login = ref();
+const submitForm = (formEl) => {
     if (!formEl) return;
-    formEl.validate(async (valid: boolean) => {
+    formEl.validate(async (valid) => {
         try {
             const message = await useAccountStore().adminLogin(param.username, param.password);
             if (valid && message === '登录成功') {

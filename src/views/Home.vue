@@ -14,12 +14,12 @@
 		</div>
 	</div>
 </template>
-<script setup lang="ts">
-import { useSidebarStore } from '../stores/sidebar.js';
-import { useTagsStore } from '../stores/tags.js';
-import myHeader from '../components/Header.vue';
-import mySidebar from '../components/Sidebar.vue';
-import myTags from '../components/Tags.vue';
+<script setup>
+import { useSidebarStore } from '@/stores/sidebar.js';
+import { useTagsStore } from '@/stores/tags.js';
+import myHeader from '@/components/Header.vue';
+import mySidebar from '@/components/Sidebar.vue';
+import myTags from '@/components/Tags.vue';
 
 const sidebar = useSidebarStore();
 const tags = useTagsStore();

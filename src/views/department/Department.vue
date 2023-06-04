@@ -35,20 +35,20 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 
 import {inject, nextTick, onMounted, ref, watch} from "vue";
 import {DeleteFilled, Plus} from "@element-plus/icons-vue";
-import DepartmentDetail from "./DepartmentDetail.vue";
+import DepartmentDetail from "@/views/department/DepartmentDetail.vue";
 import {ElMessage, ElTable} from "element-plus";
-import useCustomLoading from "../../utils/loading.js";
+import useCustomLoading from "@/utils/loading.js";
 
 const $api = inject('$api');
 
 const display = ref(false);
 const editable = ref(false);
-const multipleTableRef = ref<InstanceType<typeof ElTable>>()
-const multipleSelection = ref<User[]>([])
+const multipleTableRef = ref()
+const multipleSelection = ref([])
 const departmentTypeNum = ref(0)
 const department = ref({
     id: 0,
@@ -77,7 +77,7 @@ async function deleteDepartment() {
     }
 }
 
-function showDepartmentDetail(row: User) {
+function showDepartmentDetail(row) {
     display.value = true;
     department.value= row;
     if (row) {
@@ -88,21 +88,12 @@ function showDepartmentDetail(row: User) {
     // console.log(row);
 }
 
-const handleSelectionChange = (val: User[]) => {
+const handleSelectionChange = (val) => {
     multipleSelection.value = val
     // console.log(multipleSelection.value)
 }
 
-interface User {
-    id: number
-    name: string
-    description: string
-    region: string
-    hasChildren?: boolean
-    children?: User[]
-}
-
-const tableData = ref<User[]>([])
+const tableData = ref([])
 
 async function getDepartmentList() {
     const res = await $api.department.getDepartmentList();
@@ -112,15 +103,15 @@ async function getDepartmentList() {
     }
     departmentTypeNum.value = res.data.length;
     console.log(res)
-    let result: User[] = [];
-    let i: number = 0;
-    let j: number = departmentTypeNum.value;
-    res.data.forEach((item: any) => {
-        let children: User[] = [];
+    let result = [];
+    let i = 0;
+    let j = departmentTypeNum.value;
+    res.data.forEach((item) => {
+        let children = [];
         i++;
-        item.children.forEach((child: any) => {
+        item.children.forEach((child) => {
             j++;
-            let department: User = {
+            let department = {
                 id: 0,
                 name: '',
                 description: '',
