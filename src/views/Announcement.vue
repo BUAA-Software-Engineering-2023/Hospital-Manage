@@ -10,7 +10,6 @@
                 </el-col>
                 <el-col :span="2" :offset="15">
                     <el-button type="primary" @click="publishNotification">发布为通知</el-button>
-
                 </el-col>
                 <el-col :span="2" :offset="1">
                     <el-button type="primary" @click="publishNews">发布为新闻</el-button>
@@ -60,21 +59,55 @@
                     @onCreated="handleCreated"
             />
         </div>
+        <el-tabs v-model="message">
+            <el-tab-pane :label="`已发布通知(${state.notification.length})`" name="first">
+                <el-table :data="state.notification" style="width: 100%" ref="notificationRef">
+                    <el-table-column type="selection" width="55"/>
+                    <el-table-column label="标题" prop="title" width="180"/>
+                    <el-table-column label="日期" prop="date" width="180"/>
+                    <el-table-column label="概要" prop="short_info"/>
+                </el-table>
+                <div class="handle-row">
+                    <el-button type="primary" @click="deleteNotification">删除通知</el-button>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane :label="`已发布新闻(${state.news.length})`" name="second">
+                <template v-if="message === 'second'">
+                    <el-table :data="state.news" style="width: 100%" ref="newsRef">
+                        <el-table-column type="selection" width="55"/>
+                        <el-table-column label="标题" prop="title" width="180"/>
+                        <el-table-column label="日期" prop="date" width="180"/>
+                        <el-table-column label="概要" prop="short_info"/>
+                    </el-table>
+                    <div class="handle-row">
+                        <el-button type="primary" @click="deleteNews">删除新闻</el-button>
+                    </div>
+                </template>
+            </el-tab-pane>
+        </el-tabs>
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import '@wangeditor/editor/dist/css/style.css'; // 引入 css
 
-import {onBeforeUnmount, ref, shallowRef, inject} from 'vue';
+import {onBeforeUnmount, ref, shallowRef, inject, onMounted, nextTick} from 'vue';
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue';
 import {Notification} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
+import useCustomLoading from "@/utils/loading.js";
 
 const $api = inject('$api');
 const title = ref('');
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef();
+const message = ref('first');
+const state = ref({
+    notification: [],
+    news: []
+});
+const notificationRef = ref()
+const newsRef = ref()
 
 // 内容 HTML
 const valueHtml = ref('');
@@ -117,9 +150,13 @@ editorConfig.MENU_CONF['uploadImage'] = {
     },
 }
 
-const imageUploader = ref<HTMLElement>()
+const imageUploader = ref()
 
 async function publishNotification() {
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
     const editor = editorRef.value;
     if (editor == null) return;
     const html = editor.getHtml();
@@ -147,9 +184,14 @@ async function publishNotification() {
     editor.setHtml('');
     type.value = '1';
     imageUploader.value.clearFiles();
+    await getList();
 }
 
 async function publishNews() {
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
     const editor = editorRef.value;
     if (editor == null) return;
     const html = editor.getHtml();
@@ -177,5 +219,63 @@ async function publishNews() {
     editor.setHtml('');
     type.value = '1';
     imageUploader.value.clearFiles();
+    await getList();
 }
+
+async function deleteNotification() {
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
+    let notificationId = [];
+    for (let i = 0; i < notificationRef.value.getSelectionRows().length; i++) {
+        notificationId.push(notificationRef.value.getSelectionRows()[i].id);
+    }
+    const res = await $api.announcement.deleteNotification(notificationId);
+    if (res.result !== '1') {
+        ElMessage.error('删除失败');
+        return;
+    }
+    ElMessage.success('删除成功');
+    await getList();
+}
+
+async function deleteNews() {
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
+    let newsId = [];
+    for (let i = 0; i < newsRef.value.getSelectionRows().length; i++) {
+        newsId.push(newsRef.value.getSelectionRows()[i].id);
+    }
+    const res = await $api.announcement.deleteNews(newsId);
+    if (res.result !== '1') {
+        ElMessage.error('删除失败');
+        return;
+    }
+    ElMessage.success('删除成功');
+    await getList();
+}
+
+async function getList() {
+    let res = await $api.announcement.getNotificationList();
+    if (res.result !== '1') {
+        console.log('获取通知列表失败');
+        return;
+    }
+    state.value.notification = res.data;
+    res = await $api.announcement.getNewsList();
+    if (res.result !== '1') {
+        console.log('获取新闻列表失败');
+        return;
+    }
+    state.value.news = res.data;
+    await nextTick();
+    useCustomLoading().end();
+}
+
+onMounted(async () => {
+    await getList();
+})
 </script>

@@ -18,5 +18,43 @@ export default {
                 news_image, news_content, news_title, news_type, short_info
             }
         });
+    },
+    getNotificationList(){
+        return requests({
+            url: '/notificationList',
+            method: 'POST',
+            data: {
+                offset: -1,
+                count: -1,
+            }
+        });
+    },
+    getNewsList(){
+        return requests({
+            url: '/newsList',
+            method: 'POST',
+            data: {
+                offset: -1,
+                count: -1,
+            }
+        });
+    },
+    deleteNotification(notification_id){
+        return requests({
+            url: '/notificationManage',
+            method: 'DELETE',
+            data: {
+                notification_id
+            }
+        });
+    },
+    deleteNews(news_id){
+        return requests({
+            url: '/newsManage',
+            method: 'DELETE',
+            data: {
+                news_id
+            }
+        });
     }
 }

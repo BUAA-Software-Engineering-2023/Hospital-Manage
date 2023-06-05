@@ -71,6 +71,7 @@ const routes = [
                 name: 'announcement',
                 meta: {
                     title: '通知系统',
+                    loading: true
                 },
                 component: () => import(/* webpackChunkName: "editor" */ '../views/Announcement.vue'),
             },
